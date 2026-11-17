@@ -2,7 +2,7 @@
 
 > *A living sky of the moments people choose to keep.*
 
-Status: **Draft for review**. Nothing is built yet. This document proposes the concept, UX, workflows, data model and technical approach, and ends with open questions to settle before implementation starts.
+Status: **Approved, Phase 1 built.** See §14 for the decisions taken and what the Phase 1 prototype contains.
 
 ---
 
@@ -294,7 +294,7 @@ Milestone { userId, key, earnedAt }
 
 ---
 
-## 13. Open questions for you
+## 13. Open questions (resolved, see §14)
 
 1. **Name & tone:** is "Afterglow" and the night-sky metaphor right? Alternatives considered: *Tidepool* (memories as creatures in water), *Driftwood*, *Field of Lanterns*.
 2. **"Optical location":** I read this as **optional location**. If you meant something else (for example, visual or scene recognition from the photo), tell me.
@@ -302,3 +302,32 @@ Milestone { userId, key, earnedAt }
 4. **Public numbers:** keep resonance counts hidden (recommended), or show them?
 5. **Phase 1 scope:** start with the client-only feel prototype (recommended), or go straight to a real backend?
 6. **Platform priority:** mobile-first web (recommended), desktop-first, or equal weight?
+
+---
+
+## 14. Decisions (Nov 2026)
+
+| # | Question | Decision |
+|---|---|---|
+| 1 | Name & tone | **Afterglow**, night-sky metaphor |
+| 2 | "Optical location" | **Optional** location, blurred by default |
+| 3 | Accounts | Phase 1: none (local only). Phase 2: **sign-in required to post, Anonymous display always available, browsing open**. Revisit after alpha. |
+| 4 | Public counts | **Hidden.** Resonance shows only as brightness. Authors see their own numbers privately. Revisit after alpha. |
+| 5 | Phase 1 scope | Client-only feel prototype |
+| 6 | Platform | Mobile-first web |
+
+### What Phase 1 contains
+
+- **The Sky** on a 2D canvas (no PixiJS yet; it handles the prototype's volume with headroom). Includes mood bands, glow encoding, constellations, echo threads, pan, pinch, wheel and inertia, the shooting star and an aurora that follows the moods in view.
+- **The Tide** timeline with a mood ribbon, scrubbing and a "now" button.
+- **Lenses:** Everyone / My trail, plus a tap-to-isolate mood rail.
+- **Memory Card:** bloom from the light, swipe along the constellation, hold-to-resonate, Echo, Share (deep link `#/m/<id>`) and Remove (own memories).
+- **Catch a moment:** all 7 steps (thought, mood dial, photo or clip with a 10 s window, blurred place, extras, signature and visibility, release flight). Drafts autosave.
+- **Mood weather:** a forecast sentence, this week's mix, the 13-month mood tide (with a table view), rising words and "your weather".
+- **"While you were away"** on return, intro on first visit, optional sound (WebAudio), a list view for accessibility, and `prefers-reduced-motion` support.
+- **Storage:** your memories live in IndexedDB (media included) and resonances in localStorage. Images are re-encoded client-side, which strips EXIF.
+- **Seed content:** about 115 hand-written memories with generated imagery.
+- **Simulated (prototype only):** resonance on *your own* memories grows gently over time so the return loop can be felt. Phase 2 replaces this with real data.
+
+### Chart colors
+The sky uses the luminous mood hues in `src/moods.ts`. Charts use a separate, validated `chart` step per mood and the stacking order `CHART_ORDER` (warm and cool interleaved). This passes the lightness-band, chroma, CVD (adjacent ΔE ≥ 10.6) and normal-vision (ΔE ≥ 25.6) checks against the `#0b0d1f` surface. Every chart also has text labels and a legend, and the tide chart has a table view.
